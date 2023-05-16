@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #app,
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        button {
+            margin-top: 24px;
+            border: none;
+            background-color: white;
+            padding: 8px 24px;
+            border-radius: 12px;
+        }
+
+        .closed {
+            background-color: #cca1a6;
+        }
+
+        .open {
+            background-color: #a6cca1;
+        }
+
+        .list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item {
+            border: 11px solid #ccc;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <div id="app">
+
+    </div>
+
+    <script>
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    open: false,
+                    door: 'closed',
+                    doorStyle: {
+                        backgroundColor: 'green'
+                    },
+                    text: "Iniciar Sesión",
+                    userName: '',
+                    posts: [{
+                        title: 'Item 1',
+                        description: 'Descripción del item 1'
+                    },
+                    {
+                        title: 'Item 2',
+                        description: 'Descripción del item 2'
+                    },
+                    ]
+                }
+            },
+            watch: {
+                open() {
+                    this.door = this.open == true ? 'open' : 'closed';
+                    this.text = this.open == true ? "Cerrar Sesión" : "Iniciar Sesión";
+                }
+            },
+            methods: {
+                action() {
+
+                    if (this.open)
+                        this.doorStyle.backgroundColor = '#a6cca1';
+                    else
+                        this.doorStyle.backgroundColor = '#cca1a6';
+
+                    this.open = !this.open;
+
+                },
+            },
+            template: `
+            <div class="container" :style="doorStyle">
+                {{text}}
+                <div v-if="open">
+                    <p>Usuario: {{userName}}</p>
+                    <div class="list">
+                        <div class="item" v-for="post in posts">
+                            <div class="title">{{post.title}}</div>
+                            <p>{{post.description}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div v-else>
+                    <p>Ingresa tu nombre</p>
+            <input type="text" v-model="userName" />
+                </div>
+                <button @click="action" :class="door" >
+                    <div v-if="!open">Acceder</div>    
+                    <div v-else>Salir</div>    
+                </button>
+            </div>
+            `,
+        })
+
+        app.mount('#app')
+    </script>
+
+</body>
+
+</html>
