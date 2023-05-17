@@ -123,10 +123,7 @@
                 <div v-if="open">
                     <p>Usuario: {{userName}}</p>
                     <div class="list">
-                        <div class="item" v-for="(post, i) in posts" :key="i">
-                            <div class="title">{{post.title}}</div>
-                            <p>{{post.description}}</p>
-                        </div>
+                       <item v-for="(post, i) in posts" :key="i" :post="post" />
                     </div>
                 </div>
                 <div v-else>
@@ -137,17 +134,45 @@
                     <div v-if="!open">Acceder</div>    
                     <div v-else>Salir</div>    
                 </button>
-                <button @click="addItem" :class="door"  v-if="open">
+                <buttonAdd :addMethod="addItem" :door="door"  :open="open">
                     Agregar Elemento
-                </button>
-                <button @click="removeElement" :class="door"  v-if="open">
+                </buttonAdd>
+                <buttonRemove :removeMethod="removeElement" :door="door"  :open="open">
                     Remover Elemento
-                </button>
+                </buttonRemove>
             </div>
             `,
         })
 
-        app.mount('#app')
+        app.component('item', {
+            props: ['post'],
+            template: `
+            <div class="item">
+                            <div class="title">{{post.title}}</div>
+                            <p>{{post.description}}</p>
+                        </div>
+            `
+        })
+
+        app.component('buttonAdd', {
+            props: ['addMethod', 'door', 'open'],
+            template: `
+            <button @click="addMethod" :class="door"  v-if="open">
+                    Agregar Elemento
+                </button>
+            `
+        })
+
+        app.component('buttonRemove', {
+            props: ['removeMethod', 'door', 'open'],
+            template: `
+            <button @click="removeMethod" :class="door"  v-if="open">
+                    Remover Elemento
+                </button>
+            `
+        })
+
+        const vm = app.mount('#app')
     </script>
 
 </body>
